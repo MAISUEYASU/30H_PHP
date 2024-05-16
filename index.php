@@ -21,13 +21,7 @@
     <!-- ヘッダー：終了 -->
 
     <!-- メニュー：開始 -->
-    <nav id="menu">
-      <ul>
-        <li><a href="./index.php">ホーム</a></li>
-        <li><a href="./roomList.php">お部屋紹介</a></li>
-        <li><a href="#">ご予約</a></li>
-      </ul>
-    </nav>  
+<?php include("./topMenu.php"); ?> 
     <!-- メニュー：終了 -->
 
     <!-- アイキャッチ：開始 -->
@@ -72,21 +66,7 @@
         </section>
         <section>
           <h2>お部屋紹介</h2>
-<?php
-  $link = mysqli_connect("localhost", "jikkyo", "pass", "jikkyo_pension");
-  if ($link == null) {
-    die("接続に失敗しました:" . mysqli_connect_error());
-  }
-  mysqli_set_charset($link, "utf8");
-  $result = mysqli_query($link, "SELECT * FROM room_type");
-  echo "<ul>";
-  while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
-    echo "<li><a href='./roomList.php?tid=". $row['type_id']."'>". $row['type_name']. "</a></li>";
-  }
-  echo "</ul>";
-  mysqli_free_result($result);
-  mysqli_close($link);
-?>
+<?php include("./sideList.php"); ?>
           </section>
       </aside>
     <!-- サイド：終了 -->

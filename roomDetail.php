@@ -29,13 +29,7 @@
     <!-- ヘッダー：終了 -->
 
     <!-- メニュー：開始 -->
-    <nav id="menu">
-      <ul>
-        <li><a href="./index.php">ホーム</a></li>
-        <li><a href="./roomList.php">お部屋紹介</a></li>
-        <li><a href="#">ご予約</a></li>
-      </ul>
-    </nav>  
+<?php include("./topMenu.php"); ?>
     <!-- メニュー：終了 -->
     
     <!-- コンテンツ：開始 -->
@@ -43,7 +37,8 @@
 
     <!-- メイン：開始 -->
 <?php
-  $sql = "SELECT room_name, information, main_image, image1, image2, image3, type_name, dayfee, amenity 
+  $sql = "SELECT room_name, information, main_image, image1, image2, image3, 
+          type_name, dayfee, amenity 
           FROM room, room_type 
           WHERE room.type_id = room_type.type_id 
           AND room.room_no = {$rno}";
@@ -94,11 +89,7 @@
         </section>
         <section>
           <h2>お部屋紹介</h2>
-          <ul>
-            <li><a href="#">和室</a></li>
-            <li><a href="#">洋室</a></li>
-            <li><a href="#">和洋室</a></li>
-          </ul>
+<?php include("./sideList.php"); ?>
         </section>
       </aside>
     <!-- サイド：終了 -->
