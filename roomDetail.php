@@ -1,9 +1,5 @@
 <?php
-if (empty($_GET["tid"]) == true ) {
-  $tid = "";
-}else{
-  $tid = htmlspecialchars($_GET["tid"]);
-}
+  $rno = htmlspecialchars($_GET["rno"]);
   $link = mysqli_connect("localhost","jikkyo","pass","jikkyo_pension");
   if ( $link == null ) {
     die( "接続に失敗しました:" . mysqli_connect_error() );
@@ -46,21 +42,28 @@ if (empty($_GET["tid"]) == true ) {
     <div id="contents">
 
     <!-- メイン：開始 -->
+<?php
+  $sql = "SELECT room_name, information, main_image, image1, image2, image3, type_name, dayfee, amenity 
+          FROM room, room_type 
+          WHERE room.type_id = room_type.type_id 
+          AND room.room_no = {$rno}";
+  $result = mysqli_query($link, $sql);
+  $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+?>
       <main id="main">
         <article>
           <section>
             <h2>お部屋の詳細</h2>
-            <h3>『ゆとりの和洋室』</h3>
-            <p>お風呂・トイレも部屋内にある、広めの和洋室です。<br>
-            部活・サークルなど、気の合う仲間たちと大人数で利用するのに適しています。</p>
+            <h3>『<?php echo $row['room_name']; ?>』</h3>
+            <p><?php echo $row['information']; ?></p>
             <table>
               <tr>
-                <td><img class="middle" src="./images/room_01_01.jpg"></td>
-                <td><img class="middle" src="./images/room_01_02.jpg"></td>
+                <td><img class="middle" src="./images/<?php echo $row['main_image']; ?>"></td>
+                <td><img class="middle" src="./images/<?php echo $row['image1']; ?>"></td>
               </tr>
               <tr>
-                <td><img class="middle" src="./images/room_01_03.jpg"></td>
-                <td><img class="middle" src="./images/room_01_04.jpg"></td>
+                <td><img class="middle" src="./images/<?php echo $row['image2']; ?>"></td>
+                <td><img class="middle" src="./images/<?php echo $row['image3']; ?>"></td>
               </tr>
             </table>
             <br>
@@ -69,9 +72,10 @@ if (empty($_GET["tid"]) == true ) {
                 <th>一泊料金<br>（部屋単位）</th>
                 <th>アメニティ</th>
               <tr>
-                <td>和室</td>
-                <td class="number">&yen;8,000</td>
-                <td>部屋着、ドライヤー、シャンプー、リンス</td>
+                <td><?php echo $row['type_name']; ?></td>
+                <td class="number">&yen;
+                  <?php echo number_format($row['dayfee']); ?></td>
+                <td><?php echo $row['amenity']; ?></td>
               </tr>
             </table>
             <br>
