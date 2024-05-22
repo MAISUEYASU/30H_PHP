@@ -1,6 +1,6 @@
 <?php
   require_once('./dbConfig.php');
-  $s_link = mysqli_connect(DB_SERVER, DB_USER, DB_NAME, DB_PASS);
+  $s_link = mysqli_connect(DB_SERVER, DB_USER, DB_PASS, DB_NAME);
   if ($s_link == null) {
     die("接続に失敗しました:" . mysqli_connect_error());
   }
