@@ -34,8 +34,15 @@
           <section>
             <h2>空室検索</h2>
             <h3>宿泊予定日入力</h3>
-            <form method="post" action="">
-              
+            <form method="post" action="reserveRoomList.php">
+              <table>
+                <tr>
+                  <th></th>
+                  <td>
+                    <input type="date" name="reserveDay" value="<?php echo date('Y-m-d'); ?>"  min="<?php echo date('Y-m-d'); ?>" required></td>
+                </tr>
+              </table>
+              <input class="submit_a" type="submit" value="空室検索">
             </form>
           </section>
         </article>

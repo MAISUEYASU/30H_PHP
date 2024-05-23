@@ -1,12 +1,3 @@
-<?php
-  $rno = htmlspecialchars($_GET["rno"]);
-  require_once('./dbConfig.php');
-  $link = mysqli_connect(DB_SERVER, DB_USER, DB_PASS, DB_NAME);
-  if ( $link == null ) {
-    die( "接続に失敗しました:" . mysqli_connect_error() );
-  }
-  mysqli_set_charset( $link, "utf8" );
-?>
 <!DOCTYPE html>
 <html lang="ja">
   <head>
@@ -30,51 +21,46 @@
     <!-- ヘッダー：終了 -->
 
     <!-- メニュー：開始 -->
-<?php include("./topMenu.php"); ?>
+<?php include("./topMenu.php"); ?> 
     <!-- メニュー：終了 -->
     
     <!-- コンテンツ：開始 -->
     <div id="contents">
 
     <!-- メイン：開始 -->
-<?php
-  $sql = "SELECT room_name, information, main_image, image1, image2, image3, 
-          type_name, dayfee, amenity 
-          FROM room, room_type 
-          WHERE room.type_id = room_type.type_id 
-          AND room.room_no = {$rno}";
-  $result = mysqli_query($link, $sql);
-  $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
-?>
       <main id="main">
         <article>
+    <!-- 各ページスクリプト挿入場所 --> 
           <section>
-            <h2>お部屋の詳細</h2>
-            <h3>『<?php echo $row['room_name']; ?>』</h3>
-            <p><?php echo $row['information']; ?></p>
+            <h2>空室検索</h2>
+            <h3>**検索日付**の空室一覧</h3>
+            <p>**空室数**部屋の空室があります</p>
             <table>
               <tr>
-                <td><img class="middle" src="./images/<?php echo $row['main_image']; ?>"></td>
-                <td><img class="middle" src="./images/<?php echo $row['image1']; ?>"></td>
-              </tr>
-              <tr>
-                <td><img class="middle" src="./images/<?php echo $row['image2']; ?>"></td>
-                <td><img class="middle" src="./images/<?php echo $row['image3']; ?>"></td>
-              </tr>
-            </table>
-            <br>
-            <table>
+                <th>お部屋名称</th>
                 <th>お部屋タイプ</th>
                 <th>一泊料金<br>（部屋単位）</th>
-                <th>アメニティ</th>
-              <tr>
-                <td><?php echo $row['type_name']; ?></td>
-                <td class="number">&yen;
-                  <?php echo number_format($row['dayfee']); ?></td>
-                <td><?php echo $row['amenity']; ?></td>
+                <th colspan="2">お部屋イメージ</th>
               </tr>
+<?php 
+  $reserveDt = $_POST['reserveDay']; //予約したい日付
+  $sql = " SELECT room_name, type_name, dayfee, main_image, room_no 
+  FROM room, room_type WHERE room.type_id = room_type.type_id 
+  AND room.room_no NOT IN ( 
+    SELECT room_no FROM reserve WHERE date(reserve_date) = '{$reserveDt}')";
+
+  $result = mysqli_query($link, $sql);
+  while($row = mysqli_fetch_array($resule, MYSQLI_ASSOC)){
+    echo "";
+    echo "";
+    echo "";
+    echo "";
+    echo "";
+    echo "";
+    echo "";
+  }
+?>
             </table>
-            <br>
           </section>
         </article>
       </main>
@@ -91,7 +77,7 @@
         <section>
           <h2>お部屋紹介</h2>
 <?php include("./sideList.php"); ?>
-        </section>
+          </section>
       </aside>
     <!-- サイド：終了 -->
 
@@ -108,10 +94,5 @@
       <p>Copyright c 2016 Jikkyo Pension All Rights Reserved.</p>
   </footer>
     <!-- フッター：終了 -->
-<?php
-  mysqli_free_result($result);
-  mysqli_close($link);
-?>
-
   </body>
 </html>
