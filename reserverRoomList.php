@@ -1,3 +1,11 @@
+<?php
+  require_once('./dbConfig.php');
+  $link = mysqli_connect(DB_SERVER, DB_USER, DB_PASS, DB_NAME);
+  if ($link == null) {
+    die("接続に失敗しました:" . mysqli_connect_error());
+  }
+  mysqli_set_charset($link, "utf8");
+?>
 <!DOCTYPE html>
 <html lang="ja">
   <head>
@@ -51,13 +59,14 @@
 
   $result = mysqli_query($link, $sql);
   while($row = mysqli_fetch_array($resule, MYSQLI_ASSOC)){
-    echo "";
-    echo "";
-    echo "";
-    echo "";
-    echo "";
-    echo "";
-    echo "";
+    echo "<tr>";
+    echo "<td>{$row['room_name']}</td>";
+    echo "<td>{$row['type_name']}</td>";
+    $dayfee = number_format($row['dayfee']);
+    echo "<td class='number'>&yen; {$dayfee}</td>";
+    echo "<td><img class='small' src='./images/{$row['main_image']}'</td>";
+    echo "<td><a href='./reserveDetail.php?rno={$row['room_no']}'>選択</a></td>";
+    echo "</tr>";
   }
 ?>
             </table>
@@ -94,5 +103,9 @@
       <p>Copyright c 2016 Jikkyo Pension All Rights Reserved.</p>
   </footer>
     <!-- フッター：終了 -->
+<?php
+  mysqli_free_result($result);
+  mysqli_close($link);
+?>
   </body>
 </html>
