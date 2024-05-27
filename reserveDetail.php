@@ -21,8 +21,7 @@
     <!-- ヘッダー：終了 -->
 
     <!-- メニュー：開始 -->
-<!-- <?php include("./topMenu.php"); ?>  -->
-
+<?php include("./topMenu.php"); ?> 
     <!-- メニュー：終了 -->
     
     <!-- コンテンツ：開始 -->
@@ -32,23 +31,6 @@
       <main id="main">
         <article>
     <!-- 各ページスクリプト挿入場所 -->      
-          <section>
-            <h2>空室検索</h2>
-            <h3>宿泊予定日入力</h3>
-            <form method="post" action="reserveRoomList.php">
-              <table>
-                <tr>
-                  <th>宿泊予定日</th>
-                  <td>
-                    <input type="date" name="reserveDay" 
-                    value="<?php echo date('Y-m-d'); ?>"  
-                    min="<?php echo date('Y-m-d'); ?>" required>
-                  </td>
-                </tr>
-              </table>
-              <input class="submit_a" type="submit" value="空室検索">
-            </form>
-          </section>
         </article>
       </main>
       <!-- メイン：終了 -->

@@ -9,9 +9,9 @@
   echo "<ul>";
   while ($s_row = mysqli_fetch_array($s_result, MYSQLI_ASSOC)) {
     echo "<li><a href='./roomList.php?tid=". $s_row['type_id']."'>". $s_row['type_name']. 
-    "</a></li>";
+    "</a></li>\n";
   }
-  echo "</ul>";
+  echo "</ul>\n";
   mysqli_free_result($s_result);
   mysqli_close($s_link);
 ?>

@@ -5,7 +5,7 @@
 #「localhost」の個所を「%」に変更し、再度実行して下さい。
 
 #DROP DATABASE jikkyo_pension;    #「jikkyo_pension」データベース全体を削除
-#DROP USER 'jikkyo'@'localhost';  #「jikkyo」ユーザーを削除
+#DROP USER 'jikkyo'@'%';  #「jikkyo」ユーザーを削除
 
 ######################################################################
 

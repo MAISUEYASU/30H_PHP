@@ -39,10 +39,11 @@
       <main id="main">
         <article>
     <!-- 各ページスクリプト挿入場所 --> 
+<?php   $reserveDt = $_POST['reserveDay']; //予約したい日付 ?>
           <section>
             <h2>空室検索</h2>
-            <h3>**検索日付**の空室一覧</h3>
-            <p>**空室数**部屋の空室があります</p>
+            <h3>(**検索日付**)の空室一覧</h3>
+            <p>(**空室数**)部屋の空室があります</p>
             <table>
               <tr>
                 <th>お部屋名称</th>
@@ -51,14 +52,14 @@
                 <th colspan="2">お部屋イメージ</th>
               </tr>
 <?php 
-  $reserveDt = $_POST['reserveDay']; //予約したい日付
   $sql = " SELECT room_name, type_name, dayfee, main_image, room_no 
-  FROM room, room_type WHERE room.type_id = room_type.type_id 
+  FROM room, room_type 
+  WHERE room.type_id = room_type.type_id 
   AND room.room_no NOT IN ( 
     SELECT room_no FROM reserve WHERE date(reserve_date) = '{$reserveDt}')";
 
   $result = mysqli_query($link, $sql);
-  while($row = mysqli_fetch_array($resule, MYSQLI_ASSOC)){
+  while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
     echo "<tr>";
     echo "<td>{$row['room_name']}</td>";
     echo "<td>{$row['type_name']}</td>";
