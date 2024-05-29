@@ -1,4 +1,5 @@
 <?php
+  session_start();
   require_once('./dbConfig.php');
   $link = mysqli_connect(DB_SERVER, DB_USER, DB_PASS, DB_NAME);
   if ($link == null) {
@@ -40,7 +41,8 @@
         <article>
     <!-- 各ページスクリプト挿入場所 --> 
 <?php   
-  $reserveDt = $_POST['reserveDay']; 
+  $reserveDt = $_POST['reserveDay'];
+  $_SESSION['reserve']['day'] = $reserveDt;
   $sql = " SELECT room_name, type_name, dayfee, main_image, room_no 
   FROM room, room_type 
   WHERE room.type_id = room_type.type_id 
@@ -68,7 +70,6 @@
                 <th colspan="2">お部屋イメージ</th>
               </tr>
 <?php 
-
   while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
     echo "<tr>";
     echo "<td>{$row['room_name']}</td>";

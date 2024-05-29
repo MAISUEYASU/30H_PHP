@@ -30,7 +30,34 @@
     <!-- メイン：開始 -->
       <main id="main">
         <article>
-    <!-- 各ページスクリプト挿入場所 -->      
+    <!-- 各ページスクリプト挿入場所 -->  
+          <section>
+            <h2>ご予約（詳細情報の入力）</h2>
+            <p>詳細情報を入力後、予約確認ボタンを押してください。<br>
+            （※ がついている項目は入力必須項目です）</p>
+            <h3>予約情報</h3>
+            <table class="input">
+              <tr><th>お部屋名称</th><td>（　選択された部屋名称　）</td></tr>
+              <tr><th>宿泊日</th><td>（　入力された宿泊日　）</td></tr>
+            </table><br>
+            <h3>代表者情報</h3>
+            <form method="post" action="reserveCheck.php">
+              <table class="input">
+              <tr>
+                <th>代表者氏名（※）</th>
+                <td><input type="text" name="dname" value=""></td>
+              </tr>
+              <tr>
+                <th>連絡先電話番号</th>
+                <td><input type="text" name="dtelno" value=""></td>
+              </tr>
+              <tr>
+                <th>メールアドレス</th>
+                <td><input type="text" name="dmail" value=""></td>
+              </tr>
+              </table>
+            </form>
+          </section>    
         </article>
       </main>
       <!-- メイン：終了 -->

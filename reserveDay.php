@@ -1,3 +1,9 @@
+<?php
+  session_start();
+  if (isset($_SESSION['reserve'])) {
+    unset($_SESSION['reserve']);
+  }
+?>
 <!DOCTYPE html>
 <html lang="ja">
   <head>
