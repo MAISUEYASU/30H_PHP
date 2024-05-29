@@ -39,11 +39,27 @@
       <main id="main">
         <article>
     <!-- 各ページスクリプト挿入場所 --> 
-<?php   $reserveDt = $_POST['reserveDay']; //予約したい日付 ?>
+<?php   
+  $reserveDt = $_POST['reserveDay']; 
+  $sql = " SELECT room_name, type_name, dayfee, main_image, room_no 
+  FROM room, room_type 
+  WHERE room.type_id = room_type.type_id 
+  AND room.room_no NOT IN ( 
+    SELECT room_no FROM reserve WHERE date(reserve_date) = '{$reserveDt}')";
+
+  $result = mysqli_query($link, $sql);
+?>
           <section>
             <h2>空室検索</h2>
-            <h3>(**検索日付**)の空室一覧</h3>
-            <p>(**空室数**)部屋の空室があります</p>
+            <h3><?php echo date('Y/m/d', strtotime($reserveDt)) ; ?>の空室一覧</h3>
+<?php
+  if((mysqli_num_rows($result)) == 0){
+    echo "<p>申し訳ありません。指定の日付は満室です。</p>";
+    echo "<a href='reserveDay.php'>前の画面に戻る</a>";
+  } else {
+    echo "<p> " . mysqli_num_rows($result) . "部屋の空室があります</p>" ;
+  }
+?>
             <table>
               <tr>
                 <th>お部屋名称</th>
@@ -52,13 +68,7 @@
                 <th colspan="2">お部屋イメージ</th>
               </tr>
 <?php 
-  $sql = " SELECT room_name, type_name, dayfee, main_image, room_no 
-  FROM room, room_type 
-  WHERE room.type_id = room_type.type_id 
-  AND room.room_no NOT IN ( 
-    SELECT room_no FROM reserve WHERE date(reserve_date) = '{$reserveDt}')";
 
-  $result = mysqli_query($link, $sql);
   while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
     echo "<tr>";
     echo "<td>{$row['room_name']}</td>";
@@ -81,7 +91,7 @@
         <section>
           <h2>ご予約</h2>
           <ul>
-            <li>宿泊日入力<a href="./reserveDay.php"></a></li>
+            <li><a href="./reserveDay.php">宿泊日入力</a></li>
           </ul>
         </section>
         <section>

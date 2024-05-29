@@ -40,7 +40,7 @@
         <section>
           <h2>ご予約</h2>
           <ul>
-            <li>宿泊日入力<a href="./reserveDay.php"></a></li>
+            <li><a href="./reserveDay.php">宿泊日入力</a></li>
           </ul>
         </section>
         <section>
