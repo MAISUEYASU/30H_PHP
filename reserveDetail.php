@@ -6,13 +6,14 @@
     die("接続に失敗しました:" . mysqli_connect_error());
   }
   mysqli_set_charset($link, "utf8");
-  $room_no = $_GET['rno'];
-  $sql = "SELECT room_name FROM room WHERE room_no = {$room_no}";
+  $roomNo = $_GET['rno'];
+  $sql = "SELECT room_name FROM room WHERE room_no = {$roomNo}";
   $result = mysqli_query($link, $sql);
   $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
   $roomName = $row['room_name'];
   $_SESSION['reserve']['roomno'] = $roomNo;
   $reserveDay = $_SESSION['reserve']['day'];
+  $reserveDayStr = date('Y年n月j日', strtotime($reserveDay) );
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -56,7 +57,7 @@
               <tr><th>お部屋名称</th>
                 <td><?= $roomName ?></td></tr>
               <tr><th>宿泊日</th>
-                <td><?php echo date('Y/m/d', strtotime($reserveDay)) ; ?></td>
+                <td><?= $reserveDayStr ?></td>
               </tr>
             </table><br>
             <h3>代表者情報</h3>
