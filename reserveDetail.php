@@ -1,5 +1,24 @@
 <?php
   session_start();
+  $dnameErr = "";
+  $dtelnoErr = "";
+  $reserveNumErr = "";
+  $checkinErr ="";
+  if(isset($_SESSION['errMsg']['dname'])){
+    $dnameErr = "<span style='color: red;'>" . $_SESSION['errMsg']['dname'] . "</span>";
+  }
+  if(isset($_SESSION['errMsg']['dtelno'])){
+    $dtelnoErr = "<span style='color: red;'>" . $_SESSION['errMsg']['dtelno'] . "</span>";
+  }
+  if(isset($_SESSION['errMsg']['reserveNumber'])){
+    $reserveNumErr = "<span style='color: red;'>" . $_SESSION['errMsg']['reserveNumber'] . "</span>";
+  }
+  if(isset($_SESSION['errMsg']['checkin'])){
+    $checkinErr = "<span style='color: red;'>" . $_SESSION['errMsg']['checkin'] . "</span>";
+  }
+
+  unset($_SESSION['errMsg']);  //すべてのエラーメッセージをクリア
+
   require_once('./dbConfig.php');
   $link = mysqli_connect(DB_SERVER, DB_USER, DB_PASS, DB_NAME);
   if ($link == null) {
@@ -14,6 +33,33 @@
   $_SESSION['reserve']['roomno'] = $roomNo;
   $reserveDay = $_SESSION['reserve']['day'];
   $reserveDayStr = date('Y年n月j日', strtotime($reserveDay) );
+
+  # 再入力時に前回入力のデータを初期表示する
+  $dname = "";
+  if(isset($_SESSION['reserve']['dname']) == true){
+    $dname = $_SESSION['reserve']['dname'];
+  }
+  $dtelno = "";
+  if(isset($_SESSION['reserve']['dtelno']) == true){
+    $dtelno = $_SESSION['reserve']['dtelno'];
+  }
+  $dmail = "";
+  if(isset($_SESSION['reserve']['dmail']) == true){
+    $dmail = $_SESSION['reserve']['dmail'];
+  }
+  $reserveNumber = "";
+  if(isset($_SESSION['reserve']['reserveNumber']) == true){
+    $reserveNumber = $_SESSION['reserve']['reserveNumber'];
+  }
+  $checkin = "";
+  if(isset($_SESSION['reserve']['checkin']) == true){
+    $checkin = $_SESSION['reserve']['checkin'];
+  }
+  $message = "";
+  if(isset($_SESSION['reserve']['message']) == true){
+    $message = $_SESSION['reserve']['message'];
+  }
+
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -65,36 +111,47 @@
               <table class="input">
               <tr>
                 <th>代表者氏名（※）</th>
-                <td><input type="text" name="dname" value=""></td>
+                <td><input type="text" name="dname" value="<?= $dname ?>">
+                  <?= $dnameErr ?>
+                </td>
               </tr>
               <tr>
-                <th>連絡先電話番号</th>
-                <td><input type="text" name="dtelno" value=""></td>
+                <th>連絡先電話番号(※)</th>
+                <td><input type="text" name="dtelno" value="<?= $dtelno ?>">
+                <?= $dtelnoErr ?>
+                </td>
               </tr>
               <tr>
                 <th>メールアドレス</th>
-                <td><input type="text" name="dmail" value=""></td>
+                <td><input type="text" name="dmail" value="<?= $dmail ?>">
+                </td>
               </tr>
-              </table><br>
+              </table>
+              <br>
             <h3>予約詳細情報</h3>
             <table class="input">
               <tr>
                 <th>宿泊人数（※）</th>
-                <td><input type="text" name="reserveNumber" value=""></td>
+                <td><input type="text" name="reserveNumber" value="<?= $reserveNumber ?>">
+                <?= $reserveNumErr ?>
+                </td>
               </tr>
               <tr>
                 <th>チェックイン予定時間（※）</th>
-                <td><select name="chekin">
-                  <option value="">時間を選択</option>
+                <td><select name="checkin">
+                  <option value="<?= $checkin ?>">時間を選択</option>
                   <option value="15:00">15:00</option>
                   <option value="16:00">16:00</option>
                   <option value="17:00">17:00</option>
                   <option value="18:00">18:00</option>
                   <option value="19:00">19:00</option>
-                </select></td>
+                </select><?= $checkinErr ?></td>
               </tr>
               <tr>
-                <th>連絡事項</th><td><textarea name="message" cols="40" rows="4"></textarea></td>
+                <th>連絡事項</th>
+                <td>
+                  <textarea name="message" cols="40" rows="4"><?= $message ?></textarea>
+                </td>
               </tr>
             </table><br>
             <p>まだ予約は確定しておりません。次の画面で確定させてください。</p>
