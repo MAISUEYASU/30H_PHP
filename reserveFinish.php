@@ -1,8 +1,8 @@
 <?php
 session_start();
 if(isset($_SESSION['reserveNo']) == false) {
-  header("location: ./index.php");
-  exit();
+    header("location: ./index.php");
+    exit();
 }
 $reserveNo = $_SESSION['reserveNo'];
 unset($_SESSION['reserveNo']);

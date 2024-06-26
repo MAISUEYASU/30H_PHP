@@ -38,8 +38,8 @@ if (empty($maxno)) {               // その日初めての予約No
 $reserveNumber = $_SESSION['reserve']['reserveNumber'];
 $checkin = $_SESSION['reserve']['checkin'];
 $message = $_SESSION['reserve']['message'];
-$roomno = $_SESSION['reserve']['roomno'];
-$sql = "INSERT INTO reserve(reserve_no, reserve_date, room_no, customer_id, numbers, checkin_time, message) values (?, ?, ?, ?, ?, ?, ?)";
+$roomNo = $_SESSION['reserve']['roomno'];
+$sql = "INSERT INTO reserve(reserve_no, reserve_date, room_no, customer_id, numbers, checkin_time, message) VALUES (?, ?, ?, ?, ?, ?, ?)";
 if ($stmt = mysqli_prepare($link, $sql)) {
   mysqli_stmt_bind_param($stmt, "isiiiss", $reserveNo, $reserveDay, $roomNo, $newid, $reserveNumber, $checkin, $message);
   mysqli_stmt_execute($stmt);
