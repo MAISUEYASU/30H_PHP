@@ -7,7 +7,33 @@
   }
   mysqli_set_charset($link, "utf8");
 
-  $sql = "SELECT reserve_no, reserve_date, room_no, numbers, checkin_time, message, customer_name, customer_telno FROM customer, reserve WHERE reserve.customer_id = customer.customer_id";
+  $mode = "today"; //指定がない場合は「本日」とする
+  if (isset($_GET["disp"]) == true ) {
+    $mode = htmlspecialchars($_GET["disp"]);
+  }
+
+  $sql = "SELECT reserve_no, reserve_date, room_no, numbers, checkin_time, message, customer_name, customer_telno, customer_address 
+          FROM customer, reserve 
+          WHERE reserve.customer_id = customer.customer_id";
+
+  $today = date('Y-m-d');
+  switch($mode) {
+    case "after";
+    $modeStr = "(本日以降)";
+    $sql = $sql . " AND date(reserve_date) >= '{$today}' ORDER BY reserve_date ASC";
+    break;
+
+    case "before";
+    $modeStr = "(過去)";
+    $sql = $sql . " AND date(reserve_date) < '{$today}' ORDER BY reserve_date DESC";
+    break;
+
+    case "today";
+    default:
+      $modeStr = "(本日)";
+      $sql = $sql . " AND date(reserve_date) = '{$today} '";
+      break;
+  }
 
   $result = mysqli_query($link, $sql);
 ?>
@@ -39,16 +65,16 @@
     <!-- メニュー：開始 -->
     <nav id="menu">
         <ul>
-            <li><a href="#">本日</a></li>
-            <li><a href="#">本日以降</a></li>
-            <li><a href="#">過去</a></li>
+            <li><a href="./ownerReserveList.php?disp=today">本日</a></li>
+            <li><a href="./ownerReserveList.php?disp=after">本日以降</a></li>
+            <li><a href="./ownerReserveList.php?disp=before">過去</a></li>
         </ul>
     </nav>
     <!-- メニュー：終了 -->
 
     <!-- コンテンツ：開始 -->
     <div id="contents">
-        <h2>予約管理画面（本日）</h2>
+        <h2>予約管理画面<?= $modeStr  ?></h2>
         <p>各行の削除ボタンを押すことで、予約情報を削除することができます。</p>
         <table class="host">
             <tr>
@@ -61,20 +87,19 @@
                 <th>メッセージ</th>
                 <th></th>
             </tr>
-            <?            
+            <?php            
   while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
     echo "<tr>";
-    $rdate = date('Y年m月j日', strtotime($row['reserve_date']));
+    $rdate = date('Y-m-d', strtotime($row['reserve_date']));
     echo "<td>{$rdate}</td>";
     echo "<td>{$row['checkin_time']}</td>";
-    echo "<td>{$row['checkin_time']}</td>";
-                <td>room_no</td>
-                <td>customer_name</td>
-                <td>customer_telno</td>
-                <td>numbers</td>
-                <td>message</td>
-                <td><a href="" class="submit_a">削除</a></td>
-            </tr>
+    echo "<td>{$row['room_no']}</td>";
+    echo "<td>{$row['customer_name']}</td>";
+    echo "<td>{$row['customer_telno']}<br><a href='mailto:{$row['customer_address']}'>{$row['customer_address']}</a></td>";
+    echo "<td>{$row['numbers']}</td>";
+    echo "<td>{$row['message']}</td>";
+    echo"<td><a href='' class='submit_a'>削除</a></td>";
+    echo"</tr>";
   }
 ?>
         </table>
