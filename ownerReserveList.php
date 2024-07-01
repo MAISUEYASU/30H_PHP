@@ -6,36 +6,36 @@
     die("接続に失敗しました：" . mysqli_connect_error());
   }
   mysqli_set_charset($link, "utf8");
-
   $mode = "today"; //指定がない場合は「本日」とする
   if (isset($_GET["disp"]) == true ) {
     $mode = htmlspecialchars($_GET["disp"]);
   }
 
   $sql = "SELECT reserve_no, reserve_date, room_no, numbers, checkin_time, message, customer_name, customer_telno, customer_address 
-          FROM customer, reserve 
-          WHERE reserve.customer_id = customer.customer_id";
+        FROM customer, reserve 
+        WHERE reserve.customer_id = customer.customer_id";
 
-  $today = date('Y-m-d');
-  switch($mode) {
-    case "after";
-    $modeStr = "(本日以降)";
-    $sql = $sql . " AND date(reserve_date) >= '{$today}' ORDER BY reserve_date ASC";
+$today = date('Y-m-d');
+switch($mode) {
+  case "after";
+  $modeStr = "(本日以降)";
+  $sql = $sql . " AND date(reserve_date) >= '{$today}' ORDER BY reserve_date ASC";
+  break;
+
+  case "before";
+  $modeStr = "(過去)";
+  $sql = $sql . " AND date(reserve_date) < '{$today}' ORDER BY reserve_date DESC";
+  break;
+
+  case "today";
+  default:
+    $modeStr = "(本日)";
+    $sql = $sql . " AND date(reserve_date) = '{$today} '";
     break;
+}
 
-    case "before";
-    $modeStr = "(過去)";
-    $sql = $sql . " AND date(reserve_date) < '{$today}' ORDER BY reserve_date DESC";
-    break;
-
-    case "today";
-    default:
-      $modeStr = "(本日)";
-      $sql = $sql . " AND date(reserve_date) = '{$today} '";
-      break;
-  }
-
-  $result = mysqli_query($link, $sql);
+$result = mysqli_query($link, $sql);
+$cnt = mysqli_num_rows($result);
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -65,16 +65,22 @@
     <!-- メニュー：開始 -->
     <nav id="menu">
         <ul>
+            <li><a href="./ownerReserveList.php?disp=before">過去</a></li>
             <li><a href="./ownerReserveList.php?disp=today">本日</a></li>
             <li><a href="./ownerReserveList.php?disp=after">本日以降</a></li>
-            <li><a href="./ownerReserveList.php?disp=before">過去</a></li>
         </ul>
     </nav>
     <!-- メニュー：終了 -->
 
     <!-- コンテンツ：開始 -->
     <div id="contents">
-        <h2>予約管理画面<?= $modeStr  ?></h2>
+        <h2>予約管理画面<?php echo $modeStr; ?></h2>
+        <?php
+  if ($cnt == 0) {
+    echo "<br>";
+    echo "指定された期間にご予約はありません。";
+    } else {
+?>
         <p>各行の削除ボタンを押すことで、予約情報を削除することができます。</p>
         <table class="host">
             <tr>
@@ -85,9 +91,10 @@
                 <th>代表者連絡先</th>
                 <th>利用人数</th>
                 <th>メッセージ</th>
-                <th></th>
-            </tr>
-            <?php            
+                <?php
+  if ($mode != "before"){
+    echo "<th></th>";
+  }
   while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
     echo "<tr>";
     $rdate = date('Y-m-d', strtotime($row['reserve_date']));
@@ -98,11 +105,16 @@
     echo "<td>{$row['customer_telno']}<br><a href='mailto:{$row['customer_address']}'>{$row['customer_address']}</a></td>";
     echo "<td>{$row['numbers']}</td>";
     echo "<td>{$row['message']}</td>";
-    echo"<td><a href='' class='submit_a'>削除</a></td>";
+    if($mode != "before"){
+      echo"<td><a href='' class='submit_a'>削除</a></td>";
+    }
     echo"</tr>";
   }
 ?>
         </table>
+        <?php
+    }
+    ?>
         <br>
         <a class="submit_a" href="">ログアウトする</a>
     </div>
