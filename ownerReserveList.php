@@ -106,7 +106,7 @@ $cnt = mysqli_num_rows($result);
     echo "<td>{$row['numbers']}</td>";
     echo "<td>{$row['message']}</td>";
     if($mode != "before"){
-      echo"<td><a href='' class='submit_a'>削除</a></td>";
+      echo"<td><a class='submit_a' href='./ownerReserveDelete.php?rno={$row['reserve_no']}'>削除</a></td>";
     }
     echo"</tr>";
   }
