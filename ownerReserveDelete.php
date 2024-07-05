@@ -22,13 +22,15 @@
         exit();
     }
 
-// 削除する予約のIDがURLパラメータに存在するか確認
-    if (isset($_GET['rno'])) {
-        $reserve_no = $_GET['rno'];
-    } else {
-        echo '予約IDが指定されていません。';
-        exit();
-    }
+
+    // 7/8月　ここを変更して試す！！
+// // 削除する予約のIDがURLパラメータに存在するか確認
+//     if (isset($_GET['rno'])) {
+//         $reserve_no = $_GET['rno'];
+//     } else {
+//         echo '予約IDが指定されていません。';
+//         exit();
+//     }
 
     // 現在の日時
     $deleted_at = date('Y-m-d H:i:s');
