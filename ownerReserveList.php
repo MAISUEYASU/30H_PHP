@@ -124,7 +124,7 @@ $cnt = mysqli_num_rows($result);
         <p>Copyright c 2016 Jikkyo Pension All Rights Reserved.</p>
     </footer>
     <!-- フッター：終了 -->
-    <?
+    <?php
   mysqli_free_result($result);
   mysqli_close($link);
 ?>

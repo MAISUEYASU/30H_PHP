@@ -1,60 +1,55 @@
 <?php
+    //削除処理ファイル
     session_start();
-    // $reserveNo = htmlspecialchars($_GET["rno"]); //削除する予約のID
-    // echo "<br> 削除する予約番号は {$reserveNo} です。<br>";
-
     include './dbConfig.php';
 
-    // // セッションデータのデバッグ出力
-    // echo "<pre>";
-    // print_r($_SESSION);
-    // echo "</pre>";
+    // GETパラメータから予約番号を取得
+    $rno = $_GET['rno'];
 
-    //try-catchブロック：データベース接続の試行とエラー処理を行う
+    // トランザクションを開始
+    $link->begin_transaction();
+
     try {
-        $pdo = new PDO(
-            "mysql:host=" . DB_SERVER . 
-            ";dbname=" . DB_NAME . 
-            ";charset=utf8" , DB_USER, DB_PASS );
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    } catch (PDOException $e) {
-        echo '接続に失敗しました：' . $e->getMessage();
-        exit();
+        // 予約情報を取得
+        $reserve_sql = "SELECT * FROM reserve WHERE reserve_no = ?";
+        $reserve_stmt = $link->prepare($reserve_sql);
+        $reserve_stmt->bind_param("i", $rno);
+        $reserve_stmt->execute();
+        $reserve_result = $reserve_stmt->get_result();
+        $reserve_row = $reserve_result->fetch_assoc();
+
+        // 顧客情報を取得
+        $customer_sql = "SELECT * FROM customer WHERE customer_id = ?";
+        $customer_stmt = $link->prepare($customer_sql);
+        $customer_stmt->bind_param("i", $reserve_row['customer_id']);
+        $customer_stmt->execute();
+        $customer_result = $customer_stmt = $customer_stmt->get_result();
+        $customer_row = $customer_result->fetch_assoc();
+
+        // 予約テーブルの削除フラグを設定
+        $update_reserve_sql = "UPDATE reserve SET is_deleted = TRUE, deleted_at = NOW() WHERE reserve_no = ?";
+        $upadate_reserve_stmt = $link->prepare($update_reserve_sql);
+        $upadate_reserve_stmt->bind_param("i", $rno);
+        $upadate_reserve_stmt->execute();
+
+        //顧客テーブルの削除フラグを設定
+        $update_customer_sql = "UPDATE customer SET is_deleted = TRUE, deleted_at = NOW() WHERE customer_id = ?";
+        $update_customer_stmt = $link->prepare($update_customer_sql);
+        $update_customer_stmt->bind_param("i", $reserve_row['customer_id']);
+        $update_customer_stmt->execute();
+
+        // コミット
+        $link->commit();
+
+        //リダイレクト
+        header("Location: ownerreserveList.php");
+
+    } catch (Exception $e) {
+        // エラーが発生した場合はロールバック
+        $link->rollback();
+        echo "エラーが起きました：" . $e->getMessage();
     }
 
-
-    // 7/8月　ここを変更して試す！！
-// // 削除する予約のIDがURLパラメータに存在するか確認
-//     if (isset($_GET['rno'])) {
-//         $reserve_no = $_GET['rno'];
-//     } else {
-//         echo '予約IDが指定されていません。';
-//         exit();
-//     }
-
-    // 現在の日時
-    $deleted_at = date('Y-m-d H:i:s');
-
-    // 削除フラグを立て、削除日時を記録するクエリ
-    $sql = "UPDATE reserve SET deleted_flag = 1, deleted_at = :deleted_at WHERE reserve_no = :reserve_no";
-
-    $stmt = $pdo->prepare($sql);
-    $stmt->bindParam(':deleted_at', $deleted_at);
-    $stmt->bindParam(':reserve_no', $reserve_no);
-
-    // // デバッグ用にクエリを出力
-    // $stmt->debugDumpParams();
-
-    // if ($stmt->execute()) {
-    //     if ($stmt->rowCount() > 0) {
-    //         echo '予約が削除されました。';
-    //     } else {
-    //         echo '更新された行がありません。';
-    //     }
-    // } else {
-    //     // エラー情報の出力
-    //     $errorInfo = $stmt->errorInfo();
-    //     echo '削除に失敗しました。エラー情報: ' . print_r($errorInfo, true);
-    // }
-    
+  //  mysqli_free_result($result);
+        $link->close();   
 ?>
